@@ -32,6 +32,17 @@ app.use(cors({
 }))
 
 app.get('/movies',(req,res)=>{
+  const {genre} = req.query;
+  if(genre){
+    const genreMovie = movies.filter(movie => movie.genre.some(
+      g => g.toLowerCase() === genre.toLowerCase()
+    ));
+    return res.json(genreMovie);
+  }
+  return res.status(400).json({message:'Genre Not Found'});
+})
+
+app.get('/movies',(req,res)=>{
   res.status(200).json(movies);
 });
 
@@ -86,17 +97,6 @@ app.post('/movies',(req,res)=>{
 
   return res.status(201).json(moviePush);
 });
-
-app.get('/movies',(req,res)=>{
-  const {genre} = req.query;
-  if(genre){
-    const genreMovie = movies.filter(movie => movie.genre.some(
-      g => g.toLowerCase() === genre.toLowerCase()
-    ));
-    return res.json(genreMovie);
-  }
-  return res.status(400).json({message:'Genre Not Found'});
-})
 
 app.get('/movies/:id',(req,res)=>{
   const { id } = req.params;
